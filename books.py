@@ -13,3 +13,7 @@ BOOKS = [
 @app.get('/books')
 def read_all_books():
     return BOOKS
+
+@app.get('/books/{dynamic_param}')
+def read_all_books(dynamic_param):
+    return {'dynamic':dynamic_param}
