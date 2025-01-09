@@ -49,3 +49,12 @@ def update_book(update_book = Body()):
         if BOOKS[i].get('title').casefold() == update_book.get('title').casefold():
             BOOKS[i] = update_book
     return "selected book by the title is updated successfully"
+
+## DELETE REQUEST METHOD EXAMPLE
+@app.delete('/books/delete_book/{book_title}')
+def delete_book(book_title : str):
+    for i in range(len(BOOKS)):
+        if BOOKS[i].get('title').casefold() == book_title.casefold():
+            BOOKS.pop(i)
+            break
+    return "successfully deleted book using title name"
