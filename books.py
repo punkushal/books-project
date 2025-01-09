@@ -41,3 +41,11 @@ def read_books_by_category(category:str):
 def create_book(new_book = Body()):
     BOOKS.append(new_book)
     return "one new book is successfully added."
+
+## PUT REQUEST METHOD EXAMPLE
+@app.put('/books/update_book')
+def update_book(update_book = Body()):
+    for i in range(len(BOOKS)):
+        if BOOKS[i].get('title').casefold() == update_book.get('title').casefold():
+            BOOKS[i] = update_book
+    return "selected book by the title is updated successfully"
