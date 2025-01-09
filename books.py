@@ -25,3 +25,12 @@ def read_book(book_title: str):
 @app.get('/books/{dynamic_param}')
 def read_all_books(dynamic_param):
     return {'dynamic':dynamic_param}
+
+# Example of query parameter
+@app.get('/books/')
+def read_books_by_category(category:str):
+    books_to_return = []
+    for book in BOOKS:
+        if book.get('category').casefold() == category.casefold():
+            books_to_return.append(book)
+    return books_to_return
