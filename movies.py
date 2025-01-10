@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -7,15 +8,23 @@ class Movie:
     id: int
     title: str
     director: str
-    desrciption: str
+    description: str
     ratings: int
 
     def __init__(self, id: int, title: str, director: str, description: str, ratings: int):
         self.id = id
         self.title = title
         self.director = director
-        self.desrciption = description
+        self.description = description
         self.ratings = ratings
+
+class MovieRequest(BaseModel):
+    id: int
+    title: str
+    director: str
+    description: str
+    ratings: int
+
 
 MOVIES = [
         Movie(id=1, title='Dark Knight', director="Crishtophor Nolan", description="Batman movie",ratings=8),
@@ -31,3 +40,10 @@ def fetch_all_movies():
     return MOVIES
 
 
+# To create new movie object
+@app.post('/create_movie')
+def create_movie(movie_request : MovieRequest):
+    # ** expands the dictionary created by model_dump() to the constructor requirement
+    new_movie = Movie(**movie_request.model_dump())
+    MOVIES.append(new_movie)
+    return "successfully added new movie object"
