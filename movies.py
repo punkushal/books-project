@@ -82,3 +82,11 @@ def create_movie(movie_request : MovieRequest):
 def find_movie_id(movie : Movie):
     movie.id = 0 if len(MOVIES)==0 else MOVIES[-1].id + 1
     return movie
+
+# UPDATE EXISTING MOVIE
+@app.put('/movies/update_movie')
+def update_movie(movie : MovieRequest):
+    for i in range(len(MOVIES)):
+        if MOVIES[i].id == movie.id:
+            MOVIES[i] = movie
+    return "successfully updated existing book details"
