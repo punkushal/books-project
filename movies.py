@@ -20,11 +20,22 @@ class Movie:
         self.ratings = ratings
 
 class MovieRequest(BaseModel):
-    id: Optional[int] = None
+    id: int = Field(description='ID is optional which is automatically assigned behind the scene', default=None)
     title: str= Field(min_length=5)
     director: str = Field(min_length=10 , max_length=20)
     description: str = Field(min_length=1, max_length=100)
     ratings: int = Field(gt=-1, lt=10)
+
+    model_config = {
+        'json_schema_extra':{
+            'example':{
+                'title':'new title of a movie',
+                'director': 'new director',
+                'description': 'a new description',
+                'ratings':6
+            }
+        }
+    }
 
 
 MOVIES = [
