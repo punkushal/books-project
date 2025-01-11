@@ -52,6 +52,14 @@ def fetch_all_movies():
     return MOVIES
 
 
+# fetch movie by id
+@app.get('/movies/{movie_id}')
+def fetch_movie(movie_id : int):
+    for movie in MOVIES:
+        if movie.id == movie_id:
+            return movie
+    
+
 # To create new movie object
 @app.post('/create_movie')
 def create_movie(movie_request : MovieRequest):
