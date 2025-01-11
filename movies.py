@@ -59,6 +59,16 @@ def fetch_movie(movie_id : int):
         if movie.id == movie_id:
             return movie
     
+# fetch movies list by rating
+# query parameter as /movies followed by another /
+@app.get('/movies/')
+def fetch_movies_by_rating(rating : int):
+    movies_to_return = []
+    for movie in MOVIES:
+        if movie.ratings == rating:
+            movies_to_return.append(movie)
+    return movies_to_return
+
 
 # To create new movie object
 @app.post('/create_movie')
