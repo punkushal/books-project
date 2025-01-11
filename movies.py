@@ -1,5 +1,6 @@
+from typing import Optional
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 app = FastAPI()
 
@@ -19,11 +20,11 @@ class Movie:
         self.ratings = ratings
 
 class MovieRequest(BaseModel):
-    id: int
-    title: str
-    director: str
-    description: str
-    ratings: int
+    id: Optional[int] = None
+    title: str= Field(min_length=5)
+    director: str = Field(min_length=10 , max_length=20)
+    description: str = Field(min_length=1, max_length=100)
+    ratings: int = Field(gt=-1, lt=10)
 
 
 MOVIES = [
@@ -45,5 +46,10 @@ def fetch_all_movies():
 def create_movie(movie_request : MovieRequest):
     # ** expands the dictionary created by model_dump() to the constructor requirement
     new_movie = Movie(**movie_request.model_dump())
-    MOVIES.append(new_movie)
+    MOVIES.append(find_movie_id(new_movie))
     return "successfully added new movie object"
+
+
+def find_movie_id(movie : Movie):
+    movie.id = 0 if len(MOVIES)==0 else MOVIES[-1].id + 1
+    return movie
