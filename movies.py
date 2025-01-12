@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Path
+from fastapi import FastAPI, Path, Query, HTTPException
 from pydantic import BaseModel, Field
 
 app = FastAPI()
@@ -57,11 +57,12 @@ def fetch_movie(movie_id : int  = Path(gt=0)):
     for movie in MOVIES:
         if movie.id == movie_id:
             return movie
+    raise HTTPException(status_code=404, detail='Item not found')
     
 # fetch movies list by rating
 # query parameter as /movies followed by another /
 @app.get('/movies/')
-def fetch_movies_by_rating(rating : int = Path(gt=0 , lt=10)):
+def fetch_movies_by_rating(rating : int = Query(gt=0 , lt=10)):
     movies_to_return = []
     for movie in MOVIES:
         if movie.ratings == rating:
@@ -85,9 +86,13 @@ def find_movie_id(movie : Movie):
 # UPDATE EXISTING MOVIE
 @app.put('/movies/update_movie')
 def update_movie(movie : MovieRequest):
+    book_changed = False
     for i in range(len(MOVIES)):
         if MOVIES[i].id == movie.id:
             MOVIES[i] = movie
+            book_changed =True
+    if not book_changed:
+        raise HTTPException(status_code=404, detail="Item not found" )
     return "successfully updated existing book details"
 
 # DELETE MOVIE BY PASSING BOOK ID
