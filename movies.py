@@ -90,3 +90,12 @@ def update_movie(movie : MovieRequest):
         if MOVIES[i].id == movie.id:
             MOVIES[i] = movie
     return "successfully updated existing book details"
+
+# DELETE MOVIE BY PASSING BOOK ID
+@app.delete('/movies/{movie_id}')
+def delete_movie(movie_id : int):
+    for i in range(len(MOVIES)):
+        if MOVIES[i].id == movie_id:
+            MOVIES.pop(i)
+            break
+    
