@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Path, Query, HTTPException
 from pydantic import BaseModel, Field
+from starlette import status
 
 app = FastAPI()
 
@@ -46,13 +47,13 @@ MOVIES = [
 ]
 
 # fetching all movies
-@app.get('/movies')
+@app.get('/movies', status_code=status.HTTP_200_OK)
 def fetch_all_movies():
     return MOVIES
 
 
 # fetch movie by id
-@app.get('/movies/{movie_id}')
+@app.get('/movies/{movie_id}', status_code= status.HTTP_200_OK)
 def fetch_movie(movie_id : int  = Path(gt=0)):
     for movie in MOVIES:
         if movie.id == movie_id:
@@ -71,12 +72,11 @@ def fetch_movies_by_rating(rating : int = Query(gt=0 , lt=10)):
 
 
 # To create new movie object
-@app.post('/create_movie')
+@app.post('/create_movie', status_code=status.HTTP_201_CREATED)
 def create_movie(movie_request : MovieRequest):
     # ** expands the dictionary created by model_dump() to the constructor requirement
     new_movie = Movie(**movie_request.model_dump())
     MOVIES.append(find_movie_id(new_movie))
-    return "successfully added new movie object"
 
 
 def find_movie_id(movie : Movie):
