@@ -1,5 +1,4 @@
-from typing import Optional
-from fastapi import FastAPI
+from fastapi import FastAPI, Path
 from pydantic import BaseModel, Field
 
 app = FastAPI()
@@ -25,7 +24,7 @@ class MovieRequest(BaseModel):
     director: str = Field(min_length=10 , max_length=20)
     description: str = Field(min_length=1, max_length=100)
     ratings: int = Field(gt=-1, lt=10)
-
+   
     model_config = {
         'json_schema_extra':{
             'example':{
@@ -54,7 +53,7 @@ def fetch_all_movies():
 
 # fetch movie by id
 @app.get('/movies/{movie_id}')
-def fetch_movie(movie_id : int):
+def fetch_movie(movie_id : int  = Path(gt=0)):
     for movie in MOVIES:
         if movie.id == movie_id:
             return movie
@@ -62,7 +61,7 @@ def fetch_movie(movie_id : int):
 # fetch movies list by rating
 # query parameter as /movies followed by another /
 @app.get('/movies/')
-def fetch_movies_by_rating(rating : int):
+def fetch_movies_by_rating(rating : int = Path(gt=0 , lt=10)):
     movies_to_return = []
     for movie in MOVIES:
         if movie.ratings == rating:
@@ -93,7 +92,7 @@ def update_movie(movie : MovieRequest):
 
 # DELETE MOVIE BY PASSING BOOK ID
 @app.delete('/movies/{movie_id}')
-def delete_movie(movie_id : int):
+def delete_movie(movie_id : int = Path(gt=0)):
     for i in range(len(MOVIES)):
         if MOVIES[i].id == movie_id:
             MOVIES.pop(i)
